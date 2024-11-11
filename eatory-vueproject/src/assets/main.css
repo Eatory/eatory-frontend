@@ -1,0 +1,29 @@
+.v-date-picker {
+    background-color: #000 !important;
+    color: #fff !important;
+  }
+  
+  .v-date-picker .vc-pane {
+    background-color: #000 !important;
+  }
+  
+  .v-date-picker .vc-title,
+  .v-date-picker .vc-weeks,
+  .v-date-picker .vc-days {
+    color: #fff !important;
+  }
+  
+  .v-date-picker .vc-day.selected, 
+  .v-date-picker .vc-day:hover {
+    background-color: #333 !important;
+    color: #fff !important;
+  }
+  
+  .v-date-picker .vc-day {
+    background-color: #000 !important;
+  }
+  
+  .v-date-picker .vc-day.outside {
+    color: #666 !important;
+  }
+  
