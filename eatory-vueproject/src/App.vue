@@ -1,11 +1,14 @@
 <template>
   <div id="app">
-    <router-view />
+    <HeaderNav />
+    <RouterView />
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
+<script setup>
+import HeaderNav from '@/components/common/HeaderNav.vue';
 </script>
+
+<style>
+/* Global App Styles */
+</style>
