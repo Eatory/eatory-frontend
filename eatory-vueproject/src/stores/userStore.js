@@ -3,6 +3,20 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import router from "@/router";
 
+// Axios 전역 설정
+// Axios 전역 설정을 추가하면 프로그램이 요청마다 공통적인 설정(예: 인증 헤더 추가, 에러 처리)을 자동으로 처리합니다.
+// 이를 통해 개발자는 각 요청마다 수동으로 헤더를 추가하거나 에러 처리를 반복하지 않아도 됩니다.
+axios.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem("access-token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`; // JWT 토큰 설정
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
+
 const REST_USER_API = `http://localhost:8080/api-user`;
 
 export const useUserStore = defineStore("user", () => {
