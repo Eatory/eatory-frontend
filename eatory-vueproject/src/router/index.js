@@ -12,6 +12,7 @@ import AccountCreationView from "@/components/user/signup/AccountCreationView.vu
 import CreateAccountChoiceView from "@/components/user/signup/CreateAccountChoiceView.vue";
 import MemberNameView from "@/components/user/signup/MemberNameView.vue";
 import PhoneNumberView from "@/components/user/signup/PhoneNumberView.vue";
+import AllergyView from "@/components/user/AllergyView.vue";
 
 const routes = [
   {
@@ -66,6 +67,13 @@ const routes = [
         name: "userProfile",
         component: UserProfile,
         props: true, // 컴포넌트로 :id를 prop으로 전달
+        children: [
+          {
+            path: "allergies",
+            name: "allergyView", 
+            component: AllergyView,
+          }
+        ]
       },
     ],
   },
