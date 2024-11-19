@@ -4,7 +4,7 @@ import User from "../views/UserView.vue";
 import UserSignup from "@/views/UserSignup.vue";
 
 import UserLogin from "@/components/user/UserLogin.vue";
-import UserDetail from "@/components/user/UserDetail.vue";
+import UserProfile from "@/components/user/UserProfile.vue";
 
 import BasicInfoView from "@/components/user/signup/BasicInfoView.vue";
 import DateOfBirthView from "@/components/user/signup/DateOfBirthView.vue";
@@ -63,8 +63,8 @@ const routes = [
     children: [
       {
         path: ":id", // :id는 동적 경로
-        name: "userDetail",
-        component: UserDetail,
+        name: "userProfile",
+        component: UserProfile,
         props: true, // 컴포넌트로 :id를 prop으로 전달
       },
     ],
