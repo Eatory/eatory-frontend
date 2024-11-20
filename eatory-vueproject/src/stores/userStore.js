@@ -58,10 +58,39 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  const logoutUser = () => {
-    loginUser.value = null;
-    sessionStorage.removeItem('access-token');
-    router.push({ name: 'Home' });
+  // const logoutUser = () => {
+  //   loginUser.value = null;
+  //   sessionStorage.removeItem('access-token');
+  //   router.push({ name: 'Home' });
+  // };
+
+  const logoutUser = async () => {
+    try {
+
+      if (!loginUser.value || !loginUser.value.email) {
+        console.warn("로그인된 사용자가 없습니다.");
+        return;
+      }
+
+      //백엔드 로그아웃 API 호출 
+      const response = await axios.post(`${REST_USER_API}/logout`, {
+        email: loginUser.value.email,
+      });
+
+      if(response.status === 200) {
+        //상태 초기화
+        loginUser.value = null;
+        sessionStorage.removeItem("access-token");
+        //홈 화면으로 이동
+        router.push({name: "Home"});
+      } else {
+        console.error("로그아웃 실패:" , response.data);
+        alert("로그아웃에 실패했습니다.");
+      } 
+    } catch (error) {
+        console.error("로그아웃 중 에러", error.response || error);
+        alert("로그아웃 중 문제가 발생했습니다.")
+    }
   };
 
   return { loginUser, userLogin, userSignup, getUser, logoutUser };
