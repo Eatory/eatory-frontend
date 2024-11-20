@@ -5,12 +5,12 @@
         <RouterLink to="/" class="logo">Eatory</RouterLink>
       </div>
       <div>
-        <span v-if="!store.loginUser.name">
+        <span v-if="!store.loginUser || !store.loginUser.name">
           <RouterLink to="/login" class="navMenu">로그인</RouterLink> |
           <RouterLink to="/signup" class="navMenu">회원가입</RouterLink>
         </span>
-        <span v-else>
-          {{ store.loginUser.name }} 님 반갑습니다. |
+        <span v-else class="after-login">
+          {{ store.loginUser.name }} 님 반갑습니다 |
           <button @click="handleLogout" class="logout-button">로그아웃</button>
         </span>
       </div>
@@ -21,7 +21,7 @@
 <script setup>
 import { useUserStore } from '@/stores/userStore';
 
-const store = useUserStore();
+const store = useUserStore(); 
 
 const handleLogout = () => {
   store.logoutUser(); // Add a logout function in your store
@@ -55,6 +55,13 @@ header a {
 
 .navMenu {
   margin: 10px;
+}
+
+.after-login {
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
 }
 
 .logout-button {
