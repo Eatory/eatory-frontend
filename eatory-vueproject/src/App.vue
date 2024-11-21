@@ -17,8 +17,12 @@ import ModalPopup from './components/common/ModalPopup.vue';
 import ToastPopup from '@/components/common/ToastPopup.vue';
 
 const store = useUserStore();
-onMounted(()=>{
+onMounted( async ()=>{
   store.restoreSession(); //새로고침 시 세션 복구
+
+  if(store.loginUser) {
+    await store.getUserProfile(store.loginUser.id);
+  }
 })
 
 </script>

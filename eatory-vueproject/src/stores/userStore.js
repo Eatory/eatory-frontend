@@ -21,7 +21,16 @@ const REST_USER_API = `http://localhost:8080/api-user`;
 
 export const useUserStore = defineStore("user", () => {
   const loginUser = ref(null); // 로그인 사용자 데이터
-  const userProfile = ref(null); //프로필 정보 
+  const userProfile = ref({
+    username: "",
+    profileImage: "",
+    postCount: 0,
+    followerCount: 0,
+    followeeCount: 0,
+    allergies: [],
+    height: 0,
+    weight: 0,
+  }); //프로필 정보 
 
   // 로그인 요청
   const userLogin = async (email, password) => {
@@ -58,6 +67,9 @@ export const useUserStore = defineStore("user", () => {
 
     //세션에서 사용자 정보 복구
     loginUser.value = JSON.parse(userInfo);
+
+    //프로필 정보 복구
+    userProfile.value = loginUser.value; //복구된 정보로 초기화
   }
 
   // 회원가입 요청 (호출 방식은 signupStore에서 처리)
@@ -85,7 +97,9 @@ export const useUserStore = defineStore("user", () => {
   //프로필 조회
   const getUserProfile = async (userId) => {
     try {
+      console.log("사용자 프로필 가져오기:", userId);//디버깅 로그 추가 
       const response = await axios.get(`${REST_USER_API}/${userId}`);
+      console.log("Profile data received:", response.data); //응답 데이터 확인 
       userProfile.value = response.data; //프로필 데이터 갱신 
     } catch (error) {
       console.error("프로필 가져오기 실패:", error.response || error);
@@ -121,5 +135,5 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  return { loginUser, userLogin, userSignup, getUser, logoutUser, getUserProfile, restoreSession };
+  return { loginUser,userProfile, userLogin, userSignup, getUser, logoutUser, getUserProfile, restoreSession };
 });
