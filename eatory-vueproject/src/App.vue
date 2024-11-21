@@ -11,8 +11,12 @@ import { useUserStore } from './stores/userStore';
 import { onMounted } from 'vue';
 
 const store = useUserStore();
-onMounted(()=>{
+onMounted( async ()=>{
   store.restoreSession(); //새로고침 시 세션 복구
+
+  if(store.loginUser) {
+    await store.getUserProfile(store.loginUser.id);
+  }
 })
 
 </script>
