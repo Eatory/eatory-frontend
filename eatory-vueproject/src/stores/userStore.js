@@ -20,21 +20,45 @@ axios.interceptors.request.use((config) => {
 const REST_USER_API = `http://localhost:8080/api-user`;
 
 export const useUserStore = defineStore("user", () => {
-  const loginUser = ref({}); // 로그인 사용자 데이터
+  const loginUser = ref(null); // 로그인 사용자 데이터
+  const userProfile = ref(null); //프로필 정보 
 
   // 로그인 요청
   const userLogin = async (email, password) => {
     try {
       const response = await axios.post(`${REST_USER_API}/login`, { email, password });
+      
+      console.log("로그인 응답 데이터:", response.data); //응답 데이터 확인 
+      
+      //사용자 정보와 토큰을 세션에 저장 
       sessionStorage.setItem("access-token", response.data["access-token"]);
+      sessionStorage.setItem("user-info", JSON.stringify(response.data.user));
+      
+      // 로그인 응답 데이터 저장
       loginUser.value = response.data.user;
+      // 프로필 정보 상태에 저장
+      userProfile.value = response.data.user;
+      
       alert(`${loginUser.value.name}님, 환영합니다!`);
       router.push({ name: "Home" }); // 로그인 성공 후 홈으로 이동
+      // router.push({ name: "calendar", params: { id: loginUser.value.id } }); // 프로필 페이지로 이동
+    
     } catch (error) {
       console.error("로그인 실패:", error.response || error);
       alert("아이디/비밀번호가 틀렸습니다.");
     }
   };
+
+  //새로고침 시 상태 복구
+  const restoreSession = () => {
+    const token = sessionStorage.getItem("access-token");
+    const userInfo = sessionStorage.getItem("user-info");
+
+    if (!token || !userInfo) return; //토큰 또는 사용자 정보가 없으면 복구
+
+    //세션에서 사용자 정보 복구
+    loginUser.value = JSON.parse(userInfo);
+  }
 
   // 회원가입 요청 (호출 방식은 signupStore에서 처리)
   const userSignup = async (user) => {
@@ -58,11 +82,15 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  // const logoutUser = () => {
-  //   loginUser.value = null;
-  //   sessionStorage.removeItem('access-token');
-  //   router.push({ name: 'Home' });
-  // };
+  //프로필 조회
+  const getUserProfile = async (userId) => {
+    try {
+      const response = await axios.get(`${REST_USER_API}/${userId}`);
+      userProfile.value = response.data; //프로필 데이터 갱신 
+    } catch (error) {
+      console.error("프로필 가져오기 실패:", error.response || error);
+    }
+  };
 
   const logoutUser = async () => {
     try {
@@ -93,5 +121,5 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  return { loginUser, userLogin, userSignup, getUser, logoutUser };
+  return { loginUser, userLogin, userSignup, getUser, logoutUser, getUserProfile, restoreSession };
 });
