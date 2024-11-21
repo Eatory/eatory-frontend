@@ -11,6 +11,7 @@
         </span>
         <span v-else class="after-login">
           {{ store.loginUser.name }} 님 반갑습니다 |
+          <RouterLink :to="`/user/${store.loginUser.id}`" class="navMenu">내 프로필</RouterLink> |
           <button @click="handleLogout" class="logout-button">로그아웃</button>
         </span>
       </div>
@@ -22,6 +23,9 @@
 import { useUserStore } from '@/stores/userStore';
 
 const store = useUserStore(); 
+
+//디버깅용 로그
+console.log("loginUser 상태:", store.loginUser);
 
 const handleLogout = () => {
   store.logoutUser(); // Add a logout function in your store
