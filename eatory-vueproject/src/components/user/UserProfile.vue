@@ -60,6 +60,12 @@ const addAllergy = () => {
 };
 
 
+const handleLogout = async () => {
+  await store.logoutUser();
+  console.log("UserProfile에서 logoutUser 실행 후 상태:", store.loginUser);
+};
+
+
 </script>
 
 <style scoped>

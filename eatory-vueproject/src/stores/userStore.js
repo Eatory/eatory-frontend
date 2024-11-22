@@ -25,16 +25,19 @@ export const useUserStore = defineStore("user", () => {
   // 로그인 요청
   const userLogin = async (email, password) => {
     try {
-      const response = await axios.post(`${REST_USER_API}/login`, { email, password });
+      const response = await axios.post(`${REST_USER_API}/login`, { email, password }, {
+        headers: { Authorization: `Bearer ${sessionStorage.getItem("access-token")}`}
+      });
       
       console.log("로그인 응답 데이터:", response.data); //응답 데이터 확인 
-      
       //사용자 정보와 토큰을 세션에 저장 
       sessionStorage.setItem("access-token", response.data["access-token"]);
       sessionStorage.setItem("user-info", JSON.stringify(response.data.user));
       
+      
       // 로그인 응답 데이터 저장
       loginUser.value = response.data.user;
+      console.log("로그인 할 때 들어온 데이터!!!",JSON.stringify(loginUser.value))
       
       alert(`${loginUser.value.username}님, 환영합니다!`);
       router.push({ name: "Home" }); // 로그인 성공 후 홈으로 이동
@@ -93,23 +96,35 @@ export const useUserStore = defineStore("user", () => {
 
   const logoutUser = async () => {
     try {
-
-      if (!loginUser.value || !loginUser.value.email) {
+      console.log(JSON.stringify(loginUser.value))
+      if (!loginUser.value) {
         console.warn("로그인된 사용자가 없습니다.");
         return;
       }
 
       //백엔드 로그아웃 API 호출 
-      const response = await axios.post(`${REST_USER_API}/logout`, {
-        email: loginUser.value.email,
-      });
+      const response = await axios.post(
+        `${REST_USER_API}/logout`,
+        { email: loginUser.value.email },
+        {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access-token")}`,
+          },
+        }
+      );
 
       if(response.status === 200) {
         //상태 초기화
         loginUser.value = null;
         sessionStorage.removeItem("access-token");
-        //홈 화면으로 이동
-        router.push({name: "Home"});
+        sessionStorage.removeItem("user-info");
+        sessionStorage.removeItem("access-token");
+
+        //상태 업데이트 후 Home으로 이동
+        setTimeout(()=> {
+          router.push({name:"Home"});
+        }, 0); //비동기적 상태 업데이트 보장 
+
       } else {
         console.error("로그아웃 실패:" , response.data);
         alert("로그아웃에 실패했습니다.");
