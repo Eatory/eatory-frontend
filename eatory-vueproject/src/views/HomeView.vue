@@ -4,12 +4,15 @@
         <h1> 로고를 넣으면 어떨까 해</h1>
         <h1> 모달 테스트 </h1>
         <button @click="openExampleModal">모달 열기</button>
+        <button @click="triggerToast">토스트 테스트</button>
     </div>
 </template>
 
 <script setup>
 import { closeModal, openModal } from '@/stores/modalPopup.js';
 import ExampleModalContent from '@/components/ExampleModalContent.vue';
+
+import { useToastPopup } from '@/stores/toastPopup';
 
 const openExampleModal = () => {
     openModal('모달 제목', ExampleModalContent, [
@@ -21,6 +24,13 @@ const openExampleModal = () => {
     { label: '취소', handler: () => console.log('취소 클릭') },
     ]);
 };
+
+const { showToast } = useToastPopup();
+
+const triggerToast = () => {
+  showToast('This is a toast message!', 3000); // 3초간 표시
+};
+
 </script>
 
 <style scoped>
