@@ -5,12 +5,12 @@
         <RouterLink to="/" class="logo">Eatory</RouterLink>
       </div>
       <div>
-        <span v-if="!store.loginUser || !store.loginUser.username">
+        <span v-if="!loginUser">
           <RouterLink to="/login" class="navMenu">로그인</RouterLink> |
           <RouterLink to="/signup" class="navMenu">회원가입</RouterLink>
         </span>
         <span v-else class="after-login">
-          {{ store.loginUser.username }} 님 반갑습니다 |
+          {{ loginUser.username }} 님 반갑습니다 |
           <RouterLink :to="`/user/${store.loginUser.id}`" class="navMenu">내 프로필</RouterLink> |
           <button @click="handleLogout" class="logout-button">로그아웃</button>
         </span>
@@ -21,8 +21,11 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
+import {computed} from 'vue';
 
 const store = useUserStore(); 
+
+const loginUser = computed(()=> store.loginUser);
 
 //디버깅용 로그
 console.log("loginUser 상태:", store.loginUser);
