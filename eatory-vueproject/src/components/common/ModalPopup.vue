@@ -7,7 +7,7 @@
       <p v-if="typeof content === 'string'" v-html="content"></p>
       
       <!-- content가 컴포넌트면 렌더링 -->
-      <component v-else :is="content" />
+      <component v-else :is="content" v-bind="content.props || {}"/>
 
       <div class="modal-actions">
         <button 

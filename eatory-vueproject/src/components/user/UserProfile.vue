@@ -33,9 +33,13 @@
   </div>
 </template>
 
+
+
 <script setup>
 import { computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/userStore";
+import AddAllergyView from "@/components/allergy/AddAllergyView.vue";
+import {openModal} from "@/stores/modalPopup";
 
 // userStore 사용
 const store = useUserStore();
@@ -56,7 +60,9 @@ onMounted(() => {
 
 //알러지 추가 기능 (구현 예정)
 const addAllergy = () => {
-  alert("알러지 추가 기능은 아직 구현되지 않았습니다.");
+  openModal("알러지 추가", AddAllergyView, [
+    { label: "닫기", handler: () => closeModal()},
+  ]);
 };
 
 
@@ -64,7 +70,6 @@ const handleLogout = async () => {
   await store.logoutUser();
   console.log("UserProfile에서 logoutUser 실행 후 상태:", store.loginUser);
 };
-
 
 </script>
 
