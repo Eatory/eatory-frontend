@@ -16,7 +16,16 @@ import { onMounted } from 'vue';
 import ModalPopup from './components/common/ModalPopup.vue';
 import ToastPopup from '@/components/common/ToastPopup.vue';
 
+/* useModal과 useToastPopup 초기화 */
+import { useModal } from '@/stores/modalPopup';
+import { useToastPopup } from '@/stores/toastPopup';
+
 const store = useUserStore();
+
+/* 전역 상태 관리 초기화 */
+const modal = useModal(); // ModalPopup 상태 관리 초기화
+const toast = useToastPopup(); // ToastPopup 상태 관리 초기화
+
 onMounted( async ()=>{
   store.restoreSession(); //새로고침 시 세션 복구
 })

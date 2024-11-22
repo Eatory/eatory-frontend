@@ -9,10 +9,18 @@
 </template>
 
 <script setup>
+/* 기존
 import { closeModal, openModal } from '@/stores/modalPopup.js';
+*/
+
+
 import ExampleModalContent from '@/components/ExampleModalContent.vue';
 
+import { useModal } from '@/stores/modalPopup';
 import { useToastPopup } from '@/stores/toastPopup';
+
+// 변경
+const { openModal, closeModal } = useModal();
 
 const openExampleModal = () => {
     openModal('모달 제목', ExampleModalContent, [
