@@ -39,7 +39,9 @@
 import { computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/userStore";
 import AddAllergyView from "@/components/allergy/AddAllergyView.vue";
-import {openModal} from "@/stores/modalPopup";
+// import {openModal} from "@/stores/modalPopup";
+import { useModal } from "@/stores/modalPopup"; // useModal 훅 가져오기
+const { openModal, closeModal } = useModal(); // useModal 초기화
 
 // userStore 사용
 const store = useUserStore();
@@ -59,9 +61,16 @@ onMounted(() => {
 })
 
 //알러지 추가 기능 (구현 예정)
+// const addAllergy = () => {
+//   openModal("알러지 추가", AddAllergyView, [
+//     { label: "닫기", handler: () => closeModal()},
+//   ]);
+// };
+
+// 알러지 추가 기능
 const addAllergy = () => {
   openModal("알러지 추가", AddAllergyView, [
-    { label: "닫기", handler: () => closeModal()},
+    { label: "닫기", handler: closeModal },
   ]);
 };
 

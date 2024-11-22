@@ -5,14 +5,14 @@
 
       <!-- content가 문자열이면 그대로 표시 -->
       <p v-if="typeof content === 'string'" v-html="content"></p>
-      
+
       <!-- content가 컴포넌트면 렌더링 -->
-      <component v-else :is="content" v-bind="content.props || {}"/>
+      <component v-else :is="content" />
 
       <div class="modal-actions">
-        <button 
-          v-for="(action, index) in actions" 
-          :key="index" 
+        <button
+          v-for="(action, index) in actions"
+          :key="index"
           @click="action.handler"
         >
           {{ action.label }}
@@ -23,7 +23,9 @@
 </template>
 
 <script setup>
-import { isVisible, title, content, actions } from '@/stores/modalPopup';
+import { useModal } from "@/stores/modalPopup";
+
+const { isVisible, title, content, actions } = useModal();
 </script>
 
 <style scoped>

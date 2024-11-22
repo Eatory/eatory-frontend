@@ -3,6 +3,8 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import router from "@/router";
 
+import { useToastPopup } from "./toastPopup"; // 토스트 테스트 위해 추가
+
 // Axios 전역 설정
 // Axios 전역 설정을 추가하면 프로그램이 요청마다 공통적인 설정(예: 인증 헤더 추가, 에러 처리)을 자동으로 처리합니다.
 // 이를 통해 개발자는 각 요청마다 수동으로 헤더를 추가하거나 에러 처리를 반복하지 않아도 됩니다.
@@ -18,6 +20,8 @@ axios.interceptors.request.use((config) => {
 
 
 const REST_USER_API = `http://localhost:8080/api-user`;
+
+const { showToast } = useToastPopup();
 
 export const useUserStore = defineStore("user", () => {
   const loginUser = ref(null); // 로그인 사용자 데이터
@@ -39,13 +43,16 @@ export const useUserStore = defineStore("user", () => {
       loginUser.value = response.data.user;
       console.log("로그인 할 때 들어온 데이터!!!",JSON.stringify(loginUser.value))
       
-      alert(`${loginUser.value.username}님, 환영합니다!`);
+      // alert(`${loginUser.value.username}님, 환영합니다!`);
+      showToast(`${loginUser.value.username}님, 환영합니다!`, 3000); // alert -> 토스트 모달 변경
       router.push({ name: "Home" }); // 로그인 성공 후 홈으로 이동
       // router.push({ name: "calendar", params: { id: loginUser.value.id } }); // 프로필 페이지로 이동
     
     } catch (error) {
       console.error("로그인 실패:", error.response || error);
-      alert("아이디/비밀번호가 틀렸습니다.");
+      // alert("아이디/비밀번호가 틀렸습니다.");
+      // 로그인 실패 메시지를 토스트로 표시
+      showToast("아이디/비밀번호가 틀렸습니다.", 3000); // alert -> 토스트 모달 변경
     }
   };
 
