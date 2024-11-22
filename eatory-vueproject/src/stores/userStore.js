@@ -36,7 +36,7 @@ export const useUserStore = defineStore("user", () => {
       // 로그인 응답 데이터 저장
       loginUser.value = response.data.user;
       
-      alert(`${loginUser.value.name}님, 환영합니다!`);
+      alert(`${loginUser.value.username}님, 환영합니다!`);
       router.push({ name: "Home" }); // 로그인 성공 후 홈으로 이동
       // router.push({ name: "calendar", params: { id: loginUser.value.id } }); // 프로필 페이지로 이동
     
