@@ -1,7 +1,7 @@
 <template>
   <div class="profile-container" v-if="userProfile && userProfile.username">
     <!-- 사용자 이름 -->
-    <h1>{{ userProfile.name }}</h1>
+    <h1>{{ userProfile.username }}</h1>
     <!-- 프로필 이미지 -->
     <img :src="userProfile.profileImage" alt="Profile Image" class="profile-image" />
     <!-- 피드, 팔로워, 팔로잉 카운트 -->
@@ -41,8 +41,10 @@ import { useUserStore } from "@/stores/userStore";
 const store = useUserStore();
 
 // userProfile 상태를 계산 속성으로 가져옴 
-const userProfile = computed(() => store.userProfile);
+const userProfile = computed(() => store.loginUser);
 console.log("현재 userProfile 상태:", userProfile.value);
+console.log("현재 userProfile id:", userProfile.id);
+
 
 onMounted(() => {
   if(store.loginUser) {
