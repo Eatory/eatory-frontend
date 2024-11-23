@@ -10,6 +10,7 @@
         v-model.trim="email"
         placeholder="Email"
         class="input-field"
+        @keyup.enter="handleLogin"
       />
       <input
         type="password"
@@ -17,6 +18,7 @@
         v-model.trim="password"
         placeholder="Password"
         class="input-field"
+        @keyup.enter="handleLogin"
       />
       <button class="login-button" @click="handleLogin">Log in</button>
       <p class="forgot-password">
