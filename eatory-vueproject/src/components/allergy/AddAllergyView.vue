@@ -31,8 +31,21 @@ onMounted(async()=> {
 });
 
 //알러지 선택 시 처리 
-const selectAllergy = (allergy) => {
-    alert(`${allergy.allergyName} 알러지가 선택되었습니다.`);
+const selectAllergy = async (allergy) => {
+    const userInfo = sessionStorage.getItem("user-info");
+    const parsedUserInfo = JSON.parse(userInfo);
+    const userId = parsedUserInfo.userId;
+    console.log("addAllergyView - userId", )
+    
+    try {
+    console.log(`알러지 선택됨: ${allergy.allergyName} (ID: ${allergy.allergyId})`);
+    await allergyStore.addUserAllergy(userId, allergy.allergyId); // 알러지 추가 요청
+    alert(`${allergy.allergyName} 알러지가 성공적으로 추가되었습니다.`);
+  } catch (error) {
+    console.error("알러지 추가 중 오류 발생:", error);
+    alert("알러지 추가에 실패했습니다.");
+  }
+
 };
 
 </script>

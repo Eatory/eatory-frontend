@@ -80,9 +80,9 @@ export const useUserStore = defineStore("user", () => {
   };
 
   // 사용자 데이터 가져오기
-  const getUser = async (id) => {
+  const getUser = async (userId) => {
     try {
-      const response = await axios.get(`${REST_USER_API}/user/${id}`);
+      const response = await axios.get(`${REST_USER_API}/user/${userId}`);
       loginUser.value = response.data; // 로그인 사용자 데이터 갱신
     } catch (error) {
       console.error("유저 데이터 가져오기 실패:", error.response || error);

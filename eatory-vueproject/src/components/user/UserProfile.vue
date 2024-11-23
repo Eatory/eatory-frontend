@@ -49,12 +49,12 @@ const store = useUserStore();
 // userProfile 상태를 계산 속성으로 가져옴 
 const userProfile = computed(() => store.loginUser);
 console.log("현재 userProfile 상태:", userProfile.value);
-console.log("현재 userProfile id:", userProfile.id);
+console.log("현재 userProfile id:", userProfile.userId);
 
 
 onMounted(() => {
   if(store.loginUser) {
-    store.getUserProfile(store.loginUser.id).catch((error) => 
+    store.getUserProfile(store.loginUser.userId).catch((error) => 
     console.error("프로필 로딩에 에러 발생", error)
   );
   }

@@ -29,7 +29,35 @@ export const useAllergyStore = defineStore("allergyStore", () => {
     }
   };
 
+  //알러지 추가 메서드
+  const addUserAllergy = async(userId, allergyId) => {
+    try {
+      console.log('(store) addUserAllergy 호출됨', userId, allergyId);
+
+      const response = await axios.post(
+        `${REST_ALLERGY_API}/user-allergy`,
+        {
+          userId: userId, // JSON 요청에 userId 포함
+          allergyId: allergyId, // JSON 요청에 allergyId 포함
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json', // JSON 요청을 명시
+          },
+        }
+      );
+
+      if(response.status === 201){
+        alert(`알러지 ID: ${allergyId} 추가 성공!`);
+      } else {
+        console.warn('알러지 추가 실패')
+      }
+    } catch (error) {
+      console.error('알러지 추가 중 오류 발생:', error);
+    }
+  };
 
 
-  return { allergies, getAllergies };
+  return { allergies, getAllergies, addUserAllergy };
 })
