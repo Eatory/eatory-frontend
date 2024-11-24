@@ -17,38 +17,41 @@
 <script setup>
 import { useAllergyStore } from "@/stores/allergyStore";
 import { onMounted, computed } from "vue";
+import { useToastPopup } from "@/stores/toastPopup";
+import { useUserStore } from "@/stores/userStore";
+import { useModal } from "@/stores/modalPopup";
 
 const allergyStore = useAllergyStore();
+const userStore = useUserStore();
 const allergies = computed(() => allergyStore.allergies);
+const { showToast } = useToastPopup();
+const { closeModal } = useModal();
 
-console.log("현재 allergies:", allergies);
-
-
-onMounted(async()=> {
-    console.log("onMounted 호출됨");
-    await allergyStore.getAllergies(); //알러지 목록 불러오기 
-    console.log("allergies 상태 확인:", allergies.value);
+onMounted(async () => {
+  console.log("onMounted 호출됨");
+  await allergyStore.getAllergies(); // 알러지 목록 불러오기
+  console.log("allergies 상태 확인:", allergies.value);
 });
 
-//알러지 선택 시 처리 
+// 알러지 선택 시 처리
 const selectAllergy = async (allergy) => {
-    const userInfo = sessionStorage.getItem("user-info");
-    const parsedUserInfo = JSON.parse(userInfo);
-    const userId = parsedUserInfo.userId;
-    console.log("addAllergyView - userId", )
-    
-    try {
+  const userInfo = sessionStorage.getItem("user-info");
+  const parsedUserInfo = JSON.parse(userInfo);
+  const userId = parsedUserInfo.userId;
+
+  try {
     console.log(`알러지 선택됨: ${allergy.allergyName} (ID: ${allergy.allergyId})`);
     await allergyStore.addUserAllergy(userId, allergy.allergyId); // 알러지 추가 요청
-    alert(`${allergy.allergyName} 알러지가 성공적으로 추가되었습니다.`);
+    await userStore.getUserProfile(userId); // 사용자의 프로필 정보 다시 가져오기
+    showToast(`${allergy.allergyName} 알러지가 성공적으로 추가되었습니다.`, 3000);
+    closeModal();
   } catch (error) {
     console.error("알러지 추가 중 오류 발생:", error);
-    alert("알러지 추가에 실패했습니다.");
+    showToast("알러지 추가에 실패했습니다.", 3000);
   }
-
 };
-
 </script>
+
 
 <style scoped>
 .allergy-item {
