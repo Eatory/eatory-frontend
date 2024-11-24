@@ -49,7 +49,7 @@ export const useAllergyStore = defineStore("allergyStore", () => {
       );
 
       if(response.status === 201){
-        alert(`알러지 ID: ${allergyId} 추가 성공!`);
+        console.log(`알러지 추가 성공 | 알러지 ID: ${allergyId}`)
       } else {
         console.warn('알러지 추가 실패')
       }
