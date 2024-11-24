@@ -3,7 +3,7 @@
     <!-- 사용자 이름 -->
     <h1>{{ userProfile.username }}</h1>
     <!-- 프로필 이미지 -->
-    <img :src="userProfile.profileImage" alt="Profile Image" class="profile-image" />
+    <img :src="getImageUrl(userProfile.profileImage)" alt="Profile Image" />
     <!-- 피드, 팔로워, 팔로잉 카운트 -->
     <div class="stats">
       <span>피드 {{ userProfile.postCount }}</span> 
@@ -60,19 +60,29 @@ onMounted(() => {
   }
 })
 
-//알러지 추가 기능 (구현 예정)
-// const addAllergy = () => {
-//   openModal("알러지 추가", AddAllergyView, [
-//     { label: "닫기", handler: () => closeModal()},
-//   ]);
-// };
-
 // 알러지 추가 기능
 const addAllergy = () => {
   openModal("알러지 추가", AddAllergyView, [
     { label: "닫기", handler: closeModal },
   ]);
 };
+
+//프로필 이미지 URL 생성 함수 
+const getImageUrl = (fileName) => {
+    return `http://localhost:8080/images/${fileName}`;
+  };
+
+//프로필 정보 로드
+onMounted(async () => {
+  const userInfo = sessionStorage.getItem("user-info");
+  const parsedUserInfo = JSON.parse(userInfo);
+  const userId = parsedUserInfo.userId; //세션에서 userId 가져오기
+  if(userId) {
+    await store.getUserProfile(userId); //사용자 정보 가져오기
+  } else {
+    console.error("userID가 세션에 저장되어 있지 않습니다.")
+  }
+});
 
 
 const handleLogout = async () => {
