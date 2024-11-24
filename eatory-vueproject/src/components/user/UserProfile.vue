@@ -56,13 +56,13 @@
           <h3>Allergy Info</h3>
           <div class="allergies">
             <button
-              v-for="allergy in parsedAllergies"
-              :key="allergy"
+              v-for="allergy in userProfile.allergies"
+              :key="allergy.allergyId"
               class="allergy-item"
-              :class="{ active: selectedAllergy === allergy }"
-              @click="toggleAllergy(allergy)"
+              :class="{ active: selectedAllergy === allergy.allergyId }"
+              @click="removeAllergy(allergy.allergyId)"
             >
-              {{ allergy }}
+              {{ allergy.allergyName }}
           </button>
             <button class="add-allergy" @click="addAllergy">+</button>
           </div>
@@ -83,14 +83,17 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/userStore";
+import { useAllergyStore } from "@/stores/allergyStore";
 import AddAllergyView from "@/components/allergy/AddAllergyView.vue";
 import { useModal } from "@/stores/modalPopup";
 
-const store = useUserStore();
+const userStore = useUserStore();
+const allergyStore = useAllergyStore();
 const { openModal, closeModal } = useModal();
 
-const userProfile = computed(() => store.loginUser);
+const userProfile = computed(() => userStore.loginUser);
 const activeTab = ref("info");
+const selectedAllergy = ref(null);
 
 const getImageUrl = (fileName) => {
   return fileName
@@ -98,27 +101,26 @@ const getImageUrl = (fileName) => {
     : "http://localhost:8080/images/default-profile.png";
 };
 
-//알러지 데이터 분리
-const parsedAllergies = computed(()=> {
-  const allergies = store.loginUser.allergies[0]?.split(",") || [];
-  return allergies;
-})
+// 알러지 삭제 기능
+const removeAllergy = async (allergyId) => {
+  const userId = userProfile.value.userId; // 사용자 ID
+  console.log(userProfile.allergies); // 배열 구조 확인
 
+  try {
+    await allergyStore.deleteUserAllergy(userId, allergyId); // 삭제 API 호출
+    await userStore.getUserProfile(userId); // 삭제 후 사용자 정보 갱신
+    alert("알러지가 성공적으로 삭제되었습니다.");
+  } catch (error) {
+    console.error("알러지 삭제 실패:", error);
+    alert("알러지 삭제에 실패했습니다.");
+  }
+};
+
+// 알러지 추가 기능
 const addAllergy = () => {
   openModal("알러지 추가", AddAllergyView, [
     { label: "닫기", handler: closeModal },
   ]);
-};
-
-//알러지 선택 상태 저장 변수
-const selectedAllergy = ref("");
-
-const toggleAllergy = (allergy) => {
-  if (selectedAllergy.value === allergy) {
-    selectedAllergy.value = ""; // 선택 취소
-  } else {
-    selectedAllergy.value = allergy; // 선택 상태로 변경
-  }
 };
 
 onMounted(async () => {
@@ -127,12 +129,13 @@ onMounted(async () => {
   const userId = parsedUserInfo?.userId;
 
   if (userId) {
-    await store.getUserProfile(userId);
+    await userStore.getUserProfile(userId);
   } else {
     console.error("세션에 userID가 없습니다.");
   }
 });
 </script>
+
 
 <style scoped>
 /* 전체 컨테이너 */
@@ -325,8 +328,8 @@ onMounted(async () => {
   background: #4caf50; /* 활성화된 배경색 */
   color: #fff; /* 텍스트 흰색 */
   border: none; /* 테두리 제거 */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
 }
+
 
 /* 알러지 추가 버튼 스타일 */
 .add-allergy {

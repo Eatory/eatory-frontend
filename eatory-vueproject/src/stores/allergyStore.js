@@ -58,6 +58,31 @@ export const useAllergyStore = defineStore("allergyStore", () => {
     }
   };
 
+  // 알러지 삭제 메서드
+  const deleteUserAllergy = async (userId, allergyId) => {
+    try {
+      const response = await axios.delete(
+        `${REST_ALLERGY_API}/user-allergy/${userId}/${allergyId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      if (response.status === 204) {
+        console.log("알러지 삭제 성공:", allergyId);
 
-  return { allergies, getAllergies, addUserAllergy };
+        // 삭제된 알러지를 제외한 새로운 배열로 업데이트
+      allergies.value = allergies.value.filter((allergy) => allergy.allergyId !== allergyId);
+      } else {
+        console.warn("알러지 삭제 실패:", response.data);
+      }
+    } catch (error) {
+      console.error("알러지 삭제 중 오류 발생:", error);
+      throw error;
+    }
+  };
+
+
+  return { allergies, getAllergies, addUserAllergy, deleteUserAllergy };
 })
