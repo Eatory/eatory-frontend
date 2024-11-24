@@ -6,8 +6,8 @@
       <!-- content가 문자열이면 그대로 표시 -->
       <p v-if="typeof content === 'string'" v-html="content"></p>
 
-      <!-- content가 컴포넌트면 렌더링 -->
-      <component v-else :is="content" />
+      <!-- content가 컴포넌트면 렌더링, propsData 전달 -->
+      <component v-else :is="content" v-bind="propsData" />
 
       <div class="modal-actions">
         <button
@@ -25,8 +25,9 @@
 <script setup>
 import { useModal } from "@/stores/modalPopup";
 
-const { isVisible, title, content, actions } = useModal();
+const { isVisible, title, content, propsData, actions } = useModal();
 </script>
+
 
 <style scoped>
 .modal-overlay {
