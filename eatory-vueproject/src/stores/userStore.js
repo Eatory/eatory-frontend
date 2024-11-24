@@ -45,7 +45,8 @@ export const useUserStore = defineStore("user", () => {
       
       // alert(`${loginUser.value.username}님, 환영합니다!`);
       showToast(`${loginUser.value.username}님, 환영합니다!`, 3000); // alert -> 토스트 모달 변경
-      router.push({ name: "Home" }); // 로그인 성공 후 홈으로 이동
+      // router.push({ name: "Home" }); // 로그인 성공 후 홈으로 이동
+      router.push({ name: "calendar" });
       // router.push({ name: "calendar", params: { id: loginUser.value.id } }); // 프로필 페이지로 이동
     
     } catch (error) {
@@ -80,9 +81,9 @@ export const useUserStore = defineStore("user", () => {
   };
 
   // 사용자 데이터 가져오기
-  const getUser = async (userId) => {
+  const getUser = async (id) => {
     try {
-      const response = await axios.get(`${REST_USER_API}/user/${userId}`);
+      const response = await axios.get(`${REST_USER_API}/user/${id}`);
       loginUser.value = response.data; // 로그인 사용자 데이터 갱신
     } catch (error) {
       console.error("유저 데이터 가져오기 실패:", error.response || error);

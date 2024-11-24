@@ -22,16 +22,28 @@ import { useToastPopup } from '@/stores/toastPopup';
 // 변경
 const { openModal, closeModal } = useModal();
 
+// 모달 열기 함수
 const openExampleModal = () => {
-    openModal('모달 제목', ExampleModalContent, [
-    { label: '확인', handler: () => {
-        console.log('확인 클릭');
-        closeModal();
-     } 
-    },
-    { label: '취소', handler: () => console.log('취소 클릭') },
-    ]);
+    openModal(
+        '모달 제목',
+        ExampleModalContent,
+        { customProp: 'This is a test!' }, // ExampleModalContent로 전달할 props
+        [
+            {
+                label: '확인',
+                handler: () => {
+                    console.log('확인 클릭');
+                    closeModal();
+                },
+            },
+            {
+                label: '취소',
+                handler: () => console.log('취소 클릭'),
+            },
+        ]
+    );
 };
+
 
 const { showToast } = useToastPopup();
 

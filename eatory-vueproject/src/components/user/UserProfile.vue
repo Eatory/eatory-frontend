@@ -86,6 +86,8 @@ import { useUserStore } from "@/stores/userStore";
 import { useAllergyStore } from "@/stores/allergyStore";
 import AddAllergyView from "@/components/allergy/AddAllergyView.vue";
 import { useModal } from "@/stores/modalPopup";
+import { useToastPopup } from "@/stores/toastPopup";
+const { showToast } = useToastPopup();
 
 const userStore = useUserStore();
 const allergyStore = useAllergyStore();
@@ -109,16 +111,20 @@ const removeAllergy = async (allergyId) => {
   try {
     await allergyStore.deleteUserAllergy(userId, allergyId); // 삭제 API 호출
     await userStore.getUserProfile(userId); // 삭제 후 사용자 정보 갱신
-    alert("알러지가 성공적으로 삭제되었습니다.");
+    // alert("알러지가 성공적으로 삭제되었습니다.");
+    showToast("알러지가 성공적으로 삭제되었습니다.")
+    closeModal();
   } catch (error) {
-    console.error("알러지 삭제 실패:", error);
-    alert("알러지 삭제에 실패했습니다.");
+    // console.error("알러지 삭제 실패:", error);
+    showToast("알러지 삭제 실패:", error)
+    // alert("알러지 삭제에 실패했습니다.");
+    closeModal();
   }
 };
 
 // 알러지 추가 기능
 const addAllergy = () => {
-  openModal("알러지 추가", AddAllergyView, [
+  openModal("알러지 추가", AddAllergyView, {}, [
     { label: "닫기", handler: closeModal },
   ]);
 };
