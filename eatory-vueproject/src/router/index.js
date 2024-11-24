@@ -14,6 +14,8 @@ import MemberNameView from "@/components/user/signup/MemberNameView.vue";
 import PhoneNumberView from "@/components/user/signup/PhoneNumberView.vue";
 import AllergyView from "@/components/user/AllergyView.vue";
 
+import CalendarView from "@/views/CalendarView.vue";
+
 const routes = [
   {
     path: "/",
@@ -81,6 +83,20 @@ const routes = [
     path: "/login",
     name: "login",
     component: UserLogin,
+  },
+  {
+    path: "/calendar", // 캘린더 경로 추가
+    name: "calendar",
+    component: CalendarView,
+    beforeEnter: (to, from, next) => {
+      const userInfo = sessionStorage.getItem("user-info"); // 세션에서 유저 정보 확인
+      if (userInfo) {
+        next(); // 유저가 로그인 상태이면 캘린더로 이동
+      } else {
+        alert("로그인이 필요합니다."); // 비로그인 상태일 경우 경고 메시지
+        next({ name: "login" }); // 로그인 페이지로 리다이렉트
+      }
+    },
   },
 ];
 
