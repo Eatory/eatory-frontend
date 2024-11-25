@@ -20,11 +20,13 @@ axios.interceptors.request.use((config) => {
 
 
 const REST_USER_API = `http://localhost:8080/api-user`;
+const REST_SOCIAL_API = `http://localhost:8080/social`;
 
 const { showToast } = useToastPopup();
 
 export const useUserStore = defineStore("user", () => {
   const loginUser = ref(null); // 로그인 사용자 데이터
+  const signupStage = ref("email");  //회원가입 단계 (email, username, additional-info)
 
   // 로그인 요청
   const userLogin = async (email, password) => {
@@ -57,6 +59,64 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
+   // 소셜 로그인 요청
+   const socialLogin = async (googleAuthCode) => {
+    try {
+      const response = await axios.post(`${REST_SOCIAL_API}/google/login`, {
+        code: googleAuthCode,
+      });
+
+      // 응답 데이터 처리
+      const { email, username } = response.data;
+      sessionStorage.setItem("access-token", response.data["access-token"]);
+      sessionStorage.setItem("user-info", JSON.stringify(response.data));
+
+      // 상태 업데이트
+      loginUser.value = { ...loginUser.value, email, username: username || "" };
+
+      // username이 없는 경우, 입력 단계로 이동
+      if (!username) {
+        signupStage.value = "username";
+      } else {
+        showToast(`${username}님, 환영합니다!`, 3000);
+        router.push({ name: "calendar" });
+      }
+    } catch (error) {
+      console.error("소셜 로그인 실패:", error.response || error);
+      showToast("소셜 로그인 중 문제가 발생했습니다.", 3000);
+    }
+  };
+
+  // Username 설정 및 저장
+  const setUsernameAndProceed = async (username) => {
+    try {
+      loginUser.value.username = username;
+      const response = await axios.post(`${REST_USER_API}/update-username`, {
+        userId: loginUser.value.userId,
+        username,
+      });
+      console.log("Username 업데이트 성공:", response.data);
+      signupStage.value = "additional-info";
+    } catch (error) {
+      console.error("Username 업데이트 실패:", error.response || error);
+      showToast("Username 업데이트에 실패했습니다.", 3000);
+    }
+  };
+
+  // 추가 정보 저장
+  const saveAdditionalInfo = async () => {
+    try {
+      const response = await axios.post(`${REST_USER_API}/signup`, loginUser.value);
+      console.log("추가 정보 저장 성공:", response.data);
+      showToast("회원가입이 완료되었습니다!", 3000);
+      router.push({ name: "calendar" });
+    } catch (error) {
+      console.error("추가 정보 저장 실패:", error.response || error);
+      showToast("추가 정보 저장 중 문제가 발생했습니다.", 3000);
+    }
+  };
+
+
   //새로고침 시 상태 복구
   const restoreSession = () => {
     const token = sessionStorage.getItem("access-token");
@@ -78,6 +138,11 @@ export const useUserStore = defineStore("user", () => {
       console.error("회원가입 실패:", error.response || error);
       alert("회원가입 중 문제가 발생했습니다.");
     }
+  };
+
+  // 회원가입 단계 관리
+  const setSignupStage = (stage) => {
+    signupStage.value = stage;
   };
 
   // 사용자 데이터 가져오기
@@ -143,5 +208,5 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
-  return { loginUser, userLogin, userSignup, getUser, logoutUser, getUserProfile, restoreSession };
+  return { loginUser, userLogin, userSignup, getUser, logoutUser, getUserProfile, restoreSession, signupStage, socialLogin, setUsernameAndProceed, saveAdditionalInfo, setSignupStage };
 });

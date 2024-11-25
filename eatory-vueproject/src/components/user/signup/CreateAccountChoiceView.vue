@@ -3,20 +3,31 @@
       <h1>Create an Account</h1>
       <button class="use-email" @click="goToEmail">Use Email</button>
       <div class="or-text">or</div>
+      <button class="google" @click="signInWithGoogle">Sign In with Google</button>
       <button class="facebook">Sign In with Facebook</button>
-      <button class="google">Sign In with Google</button>
       <button class="apple">Sign In with Apple</button>
     </div>
   </template>
   
   <script setup>
   import { useRouter } from "vue-router";
+  import {useUserStore} from "@/stores/userStore";
   
   const router = useRouter();
+  const userStore = useUserStore();
   
   const goToEmail = () => {
     router.push({ name: "accountCreation" }); // 이메일/패스워드 입력 화면으로 이동
   };
+
+  //Google OAuth URL
+  const googleOAuthUrl = "https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount?client_id=569999032845-ksdq8l7v938r0hgt2di8u8ilkmt5p2n4.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2Flogin%2Foauth2%2Fcode%2Fgoogle&response_type=code&scope=openid%20profile%20email&service=lso&o2v=2&ddm=1&flowName=GeneralOAuthFlow";
+
+  //Google 로그인 버튼 클릭 이벤트 
+  const signInWithGoogle = () => {
+    window.location.href = googleOAuthUrl; //Google 로그인 URL로 리다이렉트 
+  };
+
   </script>
   
   <style scoped>

@@ -13,6 +13,7 @@ import CreateAccountChoiceView from "@/components/user/signup/CreateAccountChoic
 import MemberNameView from "@/components/user/signup/MemberNameView.vue";
 import PhoneNumberView from "@/components/user/signup/PhoneNumberView.vue";
 import AllergyView from "@/components/user/AllergyView.vue";
+import GoogleRedirectHandler from "@/components/user/signup/GoogleRedirectHandler.vue"
 
 import CalendarView from "@/views/CalendarView.vue";
 
@@ -58,6 +59,11 @@ const routes = [
         component: PhoneNumberView,
       },
     ],
+  },
+  {
+    path: "/social/google/login",
+    name: "googleRedirect",
+    component: () => import("@/components/user/signup/GoogleRedirectHandler.vue"), 
   },
   {
     path: "/user",
