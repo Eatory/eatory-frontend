@@ -17,6 +17,8 @@ import CalendarComponent from "@/components/calendar/CalendarComponent.vue";
 import ModalPopup from "@/components/common/ModalPopup.vue";
 import ToastPopup from "@/components/common/ToastPopup.vue";
 import TestCalendarRecord from "@/components/calendar/TestCalendarRecord.vue";
+import CalendarRecord from "@/components/calendar/CalendarRecord.vue";
+
 import { useModal } from "@/stores/modalPopup";
 import { useToastPopup } from "@/stores/toastPopup";
 import { useRecordStore } from "@/stores/recordStore";
@@ -111,7 +113,7 @@ const openRecordModal = (date) => {
   };
 
   // `dayRecords`가 비어 있으면 기본값 사용
-  openModal("날짜 기록 추가/수정", TestCalendarRecord, {
+  openModal("날짜 기록 추가/수정", CalendarRecord, {
     date: formattedDate,
     existingRecordData: dayRecords.length > 0 ? dayRecords : defaultProps.existingRecordData,
   });

@@ -35,7 +35,19 @@ apiClient.interceptors.request.use(
 // -------------------------------
 export function useRecordStore() {
   const records = ref([]); // 기록 데이터를 저장하는 상태
+  const selectedMenus = ref([]); // 선택된 메뉴 상태
   const { showToast } = useToastPopup(); // 토스트 팝업 사용
+
+  const selectedFood = ref(""); // 선택된 음식 상태 추가
+  
+  const setSelectedFood = (foodName) => {
+    selectedFood.value = foodName; // 선택된 음식 저장
+    console.log("선택된 음식 저장:", selectedFood.value);
+  }
+
+  const resetSelectedFood = () => {
+    selectedFood.value = "";
+  }
 
   // 특정 사용자의 기록 조회
   const getRecordsByUserId = async (userId) => {
@@ -95,11 +107,39 @@ export function useRecordStore() {
     }
   };
 
+  // 선택된 메뉴 추가
+  const addSelectedMenu = (menu) => {
+    if (!selectedMenus.value.some((item) => item.foodName === menu.foodName)) {
+      selectedMenus.value.push(menu);
+    } else {
+      showToast("이미 선택된 음식입니다.", 3000);
+    }
+  };
+
+  // 선택된 메뉴 삭제
+  const removeSelectedMenu = (foodName) => {
+    selectedMenus.value = selectedMenus.value.filter(
+      (item) => item.foodName !== foodName
+    );
+  };
+
+  // 선택된 메뉴 초기화
+  const resetSelectedMenus = () => {
+    selectedMenus.value = [];
+  };
+
   return {
     records, // 상태
+    selectedMenus,
+    addSelectedMenu,
+    removeSelectedMenu,
+    resetSelectedMenus,
     getRecordsByUserId,
     addRecord,
     updateRecord,
     deleteRecord,
+    selectedFood,
+    setSelectedFood,
+    resetSelectedFood,
   };
 }

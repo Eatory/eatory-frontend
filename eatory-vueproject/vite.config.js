@@ -15,4 +15,13 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://apis.data.go.kr', // 실제 API 서버
+        changeOrigin: true, // Origin 헤더 변경
+        rewrite: (path) => path.replace(/^\/api/, ''), // '/api' 제거
+      },
+    },
+  },
 })
