@@ -4,11 +4,13 @@
     <RouterView />
     <ModalPopup />
     <ToastPopup />
+    <FooterNav />
   </div>
 </template>
 
 <script setup>
 import HeaderNav from '@/components/common/HeaderNav.vue';
+import FooterNav from '@/components/common/FooterNav.vue';
 import { useUserStore } from './stores/userStore';
 import { onMounted } from 'vue';
 

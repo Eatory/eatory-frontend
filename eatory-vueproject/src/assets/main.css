@@ -1,3 +1,7 @@
+*{
+  margin: 0;
+}
+
 .v-date-picker {
     background-color: #000 !important;
     color: #fff !important;

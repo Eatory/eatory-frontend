@@ -20,6 +20,7 @@ const { isVisible, message } = useToastPopup();
   color: white;
   padding: 10px 20px;
   border-radius: 5px;
+  z-index:1000;
   animation: fadeInOut 3s;
 }
 

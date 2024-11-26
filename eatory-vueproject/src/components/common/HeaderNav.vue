@@ -1,23 +1,18 @@
 <template>
-  <header>
-    <nav class="header-nav">
-      <div>
-        <RouterLink to="/" class="logo">Eatory</RouterLink>
+  <header class="header">
+    <div class="header-content">
+      <!-- 로고 이미지 -->
+      <img src="@/assets/eatory.png" alt="Eatory Logo" class="logo" />
+      <div class="welcome-message">
+        {{ store.loginUser?.username || "Guest" }}님, 반갑습니다!
       </div>
-      <div>
-        <span v-if="!loginUser">
-          <RouterLink to="/login" class="navMenu">로그인</RouterLink> |
-          <RouterLink to="/signup" class="navMenu">회원가입</RouterLink>
-        </span>
-        <span v-else class="after-login">
-          {{ loginUser.username || loginUser.name}} 님 반갑습니다 |
-          <RouterLink :to="`/user/${store.loginUser.userId}`" class="navMenu">내 프로필</RouterLink> |
-          <button @click="handleLogout" class="logout-button">로그아웃</button>
-        </span>
-      </div>
-    </nav>
+      <!-- <RouterLink :to="`/user/${store.loginUser?.userId}`" class="profile-link">
+        내 프로필
+      </RouterLink> -->
+    </div>
   </header>
 </template>
+
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
@@ -36,45 +31,50 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-/* Header CSS */
-header {
-  height: 70px;
-  background-color: rgb(0, 0, 0);
-  line-height: 70px;
-  padding: 0 30px;
-}
-
-header a {
-  text-decoration: none;
-  color: white;
-}
-
-.header-nav {
+.header {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* 로고와 텍스트 사이 간격 */
 }
 
 .logo {
-  font-size: 2rem;
-  font-weight: bold;
-  color: white;
+  width: 120px; /* 로고의 너비 */
+  height: auto; /* 비율 유지 */
+  object-fit: contain; /* 로고 이미지 비율 조정 */
 }
 
-.navMenu {
-  margin: 10px;
+.welcome-message {
+  font-size: 19px;
+  color: #fff;
+  margin-left: auto; /* 오른쪽으로 정렬 */
+  margin-bottom: 10px; /* 살짝 아래로 이동 */
+  align-self: flex-end; /* 아래쪽으로 정렬 */
+  text-align: right; /* 텍스트 정렬 */
 }
 
-.after-login {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
+
+.profile-link {
+  font-size: 14px;
+  color: #fff;
+  text-decoration: none;
+  padding: 5px 10px;
+  background-color: #333;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
-.logout-button {
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
+.profile-link:hover {
+  background-color: #555;
 }
+
 </style>

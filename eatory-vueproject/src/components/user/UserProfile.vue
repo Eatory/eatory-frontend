@@ -153,6 +153,7 @@ onMounted(async () => {
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  padding-bottom: 100px;
 }
 
 /* 프로필 헤더 */
