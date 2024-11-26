@@ -15,6 +15,7 @@ import PhoneNumberView from "@/components/user/signup/PhoneNumberView.vue";
 import AllergyView from "@/components/user/AllergyView.vue";
 import OAuth2CallbackView from "@/components/user/socialLogin/OAuth2CallbackView.vue";
 import CalendarView from "@/views/CalendarView.vue";
+import PostFeed from "@/components/post/PostFeed.vue"
 
 const routes = [
   {
@@ -102,6 +103,11 @@ const routes = [
         next({ name: "login" }); // 로그인 페이지로 리다이렉트
       }
     },
+  },
+  {
+    path: "/postFeed",
+    name: "postFeed",
+    component: PostFeed,
   },
 ];
 

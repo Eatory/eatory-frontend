@@ -32,7 +32,7 @@
     <!-- 탭 네비게이션 -->
     <div class="tabs">
       <button :class="{ active: activeTab === 'info' }" @click="activeTab = 'info'">내 정보</button>
-      <button :class="{ active: activeTab === 'diary' }" @click="activeTab = 'diary'">내 일기</button>
+      <button :class="{ active: activeTab === 'diary' }" @click="activeTab = 'diary'">내 피드</button>
     </div>
 
     <!-- 컨텐츠 -->
