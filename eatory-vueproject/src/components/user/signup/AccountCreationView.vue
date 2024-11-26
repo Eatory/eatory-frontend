@@ -6,7 +6,7 @@
       <input
         type="email"
         id="email"
-        v-model="signupStore.signupData.email"
+        v-model="email"
         placeholder="Enter your email"
         required
         class="input-field"
@@ -17,13 +17,12 @@
         <input
           type="password"
           id="password"
-          v-model="signupStore.signupData.password"
+          v-model="password"
           placeholder="Enter your password"
           required
           class="input-field"
         />
-        <button type="button" class="toggle-password">
-          <!-- You can replace this with an eye icon -->
+        <button type="button" class="toggle-password" @click="togglePasswordVisibility">
           👁️
         </button>
       </div>
@@ -38,14 +37,30 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useSignupStore } from '@/stores/signupStore';
 import { useRouter } from 'vue-router';
 
 const signupStore = useSignupStore();
 const router = useRouter();
 
+const email = ref('');
+const password = ref('');
+const showPassword = ref(false);
+
+const togglePasswordVisibility = () => {
+  showPassword.value = !showPassword.value;
+  const input = document.getElementById('password');
+  input.type = showPassword.value ? 'text' : 'password';
+};
+
 const goToNext = () => {
-  router.push({ name: 'memberName' });
+  if (email.value.trim() && password.value.trim()) {
+    signupStore.updateSignupData({ email: email.value, password: password.value });
+    router.push({ name: 'memberName' });
+  } else {
+    alert('Please complete all fields.');
+  }
 };
 </script>
 

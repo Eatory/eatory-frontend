@@ -59,6 +59,11 @@ const router = useRouter();
 
 const goToNext = () => {
   if (signupStore.signupData.gender && signupStore.signupData.height && signupStore.signupData.weight) {
+    signupStore.updateSignupData({
+      gender: signupStore.signupData.gender,
+      height: signupStore.signupData.height,
+      weight: signupStore.signupData.weight,
+    });
     router.push({ name: "dateOfBirth" });
   } else {
     alert("Please complete all fields before continuing.");

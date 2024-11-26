@@ -1,8 +1,9 @@
 <template>
   <div class="member-name-container">
     <h2>Member name</h2>
+    <hr/>
     <div class="image-container">
-      <img class="dog" src="@/assets/dog.png" alt="Dog" />
+
       <img class="person" src="@/assets/person.png" alt="Person" />
     </div>
     <p class="description">
@@ -28,14 +29,17 @@ import { useRouter } from 'vue-router';
 const signupStore = useSignupStore();
 const router = useRouter();
 
-const submitSignup = () => {
-  if (signupStore.signupData.memberName.trim() === "") {
+const submitSignup = async () => {
+  if (!signupStore.signupData.memberName.trim()) {
     alert("Please enter a valid member name.");
     return;
   }
-  signupStore.submitSignup().then(() => {
-    router.push({ name: 'Home' }); // Redirect to the home page after signup
-  });
+  try {
+    await signupStore.submitSignup(); // 서버로 데이터 전송
+    router.push({ name: "Home" }); // 회원가입 완료 후 홈으로 리다이렉트
+  } catch (error) {
+    console.error("회원가입 실패:", error);
+  }
 };
 </script>
 
