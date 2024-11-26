@@ -13,8 +13,7 @@ import CreateAccountChoiceView from "@/components/user/signup/CreateAccountChoic
 import MemberNameView from "@/components/user/signup/MemberNameView.vue";
 import PhoneNumberView from "@/components/user/signup/PhoneNumberView.vue";
 import AllergyView from "@/components/user/AllergyView.vue";
-import GoogleRedirectHandler from "@/components/user/signup/GoogleRedirectHandler.vue"
-
+import OAuth2CallbackView from "@/components/user/socialLogin/OAuth2CallbackView.vue";
 import CalendarView from "@/views/CalendarView.vue";
 
 const routes = [
@@ -61,11 +60,6 @@ const routes = [
     ],
   },
   {
-    path: "/social/google/login",
-    name: "googleRedirect",
-    component: () => import("@/components/user/signup/GoogleRedirectHandler.vue"), 
-  },
-  {
     path: "/user",
     name: "user",
     component: User,
@@ -84,6 +78,11 @@ const routes = [
         ]
       },
     ],
+  },
+  {
+    path: "/oauth2/callback",
+    name: "OAuth2Callback", 
+    component:OAuth2CallbackView, //콜백 처리 뷰 
   },
   {
     path: "/login",

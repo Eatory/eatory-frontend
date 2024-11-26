@@ -23,7 +23,7 @@ const goToEmail = () => {
 
 // Google OAuth URL
 const signInWithGoogle = () => {
-  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=569999032845-ksdq8l7v938r0hgt2di8u8ilkmt5p2n4.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=openid profile email&state=member-name`;
+  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=569999032845-ksdq8l7v938r0hgt2di8u8ilkmt5p2n4.apps.googleusercontent.com&redirect_uri=http://localhost:5173/oauth2/callback&response_type=code&scope=openid%20email%20profile&state=calendar`;
   window.location.href = googleLoginUrl; // Google OAuth로 리다이렉트
 };
 

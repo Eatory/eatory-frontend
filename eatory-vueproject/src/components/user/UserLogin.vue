@@ -25,16 +25,18 @@
       <a href="/forgot-password">Forgot password?</a>
     </p>
     <div class="divider">or</div>
-    <button class="google-login-button" @click="handleGoogleLogin">Sign in with Google</button>
+    <button class="google-login-button" @click="redirectToGoogle">Sign in with Google</button>
   </div>
 </template>
 
 <script setup>
+import { useLoginStore } from "@/stores/loginStore";
 import { useUserStore } from "@/stores/userStore";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 
 const store = useUserStore();
+const loginstore = useLoginStore();
 const router = useRouter();
 
 const email = ref("");
@@ -45,32 +47,41 @@ const handleLogin = () => {
   store.userLogin(email.value, password.value);
 };
 
-// 구글 로그인 처리
-const handleGoogleLogin = (state = "calendar") => {
-  const googleLoginUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=569999032845-ksdq8l7v938r0hgt2di8u8ilkmt5p2n4.apps.googleusercontent.com&redirect_uri=http://localhost:8080/login/oauth2/code/google&response_type=code&scope=openid profile email&state=${state}`;
-  window.location.href = googleLoginUrl;
+
+const redirectToGoogle = () => {
+  const googleOAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=569999032845-ksdq8l7v938r0hgt2di8u8ilkmt5p2n4.apps.googleusercontent.com&redirect_uri=http://localhost:5173/oauth2/callback&response_type=code&scope=openid%20email%20profile&state=calendar`;
+  window.location.href = googleOAuthUrl; //구글 인증 페이지로 이동 
+}
+
+// Google OAuth 콜백 처리
+const handleGoogleCallback = async () => {
+  const query = new URLSearchParams(window.location.search);
+  const authCode = query.get("code");
+  const state = query.get("state"); // Optional: 상태 값
+
+  if (authCode) {
+    try {
+      // 소셜 로그인 처리
+      await loginStore.socialLogin(authCode);
+
+      // 상태 값에 따라 리다이렉션 처리
+      if (state === "calendar") {
+        router.push({ name: "calendar" });
+      } else {
+        router.push({ name: "Home" });
+      }
+    } catch (error) {
+      console.error("Google Login Failed:", error);
+      alert("Google Login Failed.");
+    }
+  } else {
+    console.error("Authorization Code가 없습니다.");
+  }
 };
 
-// URL에서 소셜 로그인 결과 처리
+// 컴포넌트 마운트 되었을 때 OAuth 콜백 처리 
 onMounted(() => {
-  const query = new URLSearchParams(window.location.search);
-
-  const state = query.get("state"); // 상태 가져오기
-  const accessToken = query.get("accessToken");
-  const refreshToken = query.get("refreshToken");
-
-  if (accessToken && refreshToken) {
-    store.handleSocialLogin({ accessToken, refreshToken });
-
-    // 상태에 따라 적절한 페이지로 리다이렉션
-    if (state === "calendar") {
-      router.replace({ name: "calendar" });
-    } else if (state === "member-name") {
-      router.replace({ name: "memberName" });
-    } else {
-      router.replace({ name: "home" });
-    }
-  }
+  handleGoogleCallback();
 });
 </script>
 

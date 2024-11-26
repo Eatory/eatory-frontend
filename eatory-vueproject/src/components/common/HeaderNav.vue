@@ -10,7 +10,7 @@
           <RouterLink to="/signup" class="navMenu">회원가입</RouterLink>
         </span>
         <span v-else class="after-login">
-          {{ loginUser.username }} 님 반갑습니다 |
+          {{ loginUser.username || loginUser.name}} 님 반갑습니다 |
           <RouterLink :to="`/user/${store.loginUser.userId}`" class="navMenu">내 프로필</RouterLink> |
           <button @click="handleLogout" class="logout-button">로그아웃</button>
         </span>
