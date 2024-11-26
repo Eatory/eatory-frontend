@@ -3,31 +3,37 @@
     <h1>Phone Number</h1>
     <input
       type="text"
-      v-model="signupStore.signupData.phoneNumber"
+      v-model="phoneNumber"
       placeholder="Enter your phone number"
+      class="input-field"
     />
     <button class="continue-button" @click="goToNext">Agree and Continue</button>
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useSignupStore } from '@/stores/signupStore';
 import { useRouter } from 'vue-router';
 
 const signupStore = useSignupStore();
 const router = useRouter();
 
+const phoneNumber = ref('');
+
 const goToNext = () => {
-  if (!signupStore.signupData.phoneNumber.trim()) {
+  if (phoneNumber.value.trim()) {
+    signupStore.updateSignupData({ phoneNumber: phoneNumber.value });
+    // 'createAccount'로 이동
+    router.push({ name: 'createAccountChoice' });
+  } else {
     alert('Please enter a valid phone number.');
-    return;
   }
-  router.push({ name: 'createAccountChoice' });
 };
 </script>
 
 <style scoped>
-/* 전체 컨테이너 */
+/* 스타일 유지 */
 .phone-number-container {
   display: flex;
   flex-direction: column;
@@ -52,7 +58,7 @@ h1 {
 /* 입력 필드 스타일 */
 input[type="text"] {
   width: 100%;
-  max-width: 350px; /* 폭을 다른 페이지와 동일하게 조정 */
+  max-width: 350px;
   padding: 12px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -79,11 +85,10 @@ input[type="text"]::placeholder {
   border-radius: 8px;
   cursor: pointer;
   width: 100%;
-  max-width: 350px; /* 버튼 폭을 다른 페이지와 동일하게 조정 */
+  max-width: 350px;
   text-align: center;
 }
 
-/* 반응형 디자인 */
 @media screen and (max-width: 768px) {
   .phone-number-container {
     padding: 20px;

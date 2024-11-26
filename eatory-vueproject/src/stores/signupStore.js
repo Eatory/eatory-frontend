@@ -1,33 +1,39 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { reactive } from "vue";
 import axios from "axios";
-import router from "@/router";
-
-const REST_USER_API = `http://localhost:8080/api-user`;
 
 export const useSignupStore = defineStore("signup", () => {
-  const signupData = ref({
+  // 회원가입 데이터
+  const signupData = reactive({
+    email: "",
+    password: "",
+    phoneNumber: "",
+    memberName: "",
     gender: "",
     height: null,
     weight: null,
-    dateOfBirth: "",
-    phoneNumber: "",
-    accountType: "",
-    memberName: ""
+    dateOfBirth: null,
   });
 
-  // 최종 회원가입 요청
+  // 데이터 업데이트 메서드
+  const updateSignupData = (data) => {
+    Object.assign(signupData, data);
+  };
+
+  // 최종 데이터 제출 메서드
   const submitSignup = async () => {
     try {
-      // POST 요청으로 회원가입 데이터 전송
-      await axios.post(`${REST_USER_API}/signup`, signupData.value);
-      alert("회원가입 완료!");
-      router.push({ name: "userLogin" }); // 회원가입 성공 시 로그인 페이지로 이동
+      const response = await axios.post("http://localhost:8080/api-user/signup", signupData);
+      console.log("회원가입 성공:", response.data);
     } catch (error) {
       console.error("회원가입 실패:", error.response || error);
-      alert("회원가입 중 문제가 발생했습니다.");
+      throw error;
     }
   };
 
-  return { signupData, submitSignup };
+  return {
+    signupData,
+    updateSignupData,
+    submitSignup,
+  };
 });
